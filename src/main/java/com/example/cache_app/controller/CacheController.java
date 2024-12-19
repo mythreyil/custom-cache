@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * REST controller exposing APIs for cache management.
  */
@@ -56,6 +58,15 @@ public class CacheController {
     @GetMapping("/{id}")
     public Data get(@PathVariable Long id) {
         return cachingService.get(id);
+    }
+
+    /**
+     * Fetches all entities from cache or database.
+     * @return all entities.
+     */
+    @GetMapping()
+    public Map<Long, Data> getAll() {
+        return cachingService.getAll();
     }
 
     /**

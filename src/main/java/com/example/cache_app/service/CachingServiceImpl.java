@@ -41,6 +41,7 @@ public class CachingServiceImpl implements CachingService {
     public void add(Data entity) {
         log.info("Adding entity with ID: {} to cache", entity.getId());
         cache.put(entity.getId(), entity);
+        repository.save(entity);
     }
 
     @Override
@@ -62,6 +63,11 @@ public class CachingServiceImpl implements CachingService {
         log.info("Fetching entity with ID: {} from cache or database", id);
         return cache.computeIfAbsent(id, key -> repository.findById(key)
                 .orElseThrow(() -> new CacheNotFoundException("Data not found for id: " + id)));
+    }
+
+    @Override
+    public Map<Long, Data> getAll() {
+        return cache;
     }
 
     @Override

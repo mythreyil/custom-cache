@@ -10,8 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,6 +40,26 @@ class CacheServiceApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/cache/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Entity removed from cache and database."));
+    }
+
+    @Test
+    void testRemoveAllEntity() throws Exception {
+        cachingService.add(new Data() {{ setId(1L); setData("Sample Data 1"); }});
+        cachingService.add(new Data() {{ setId(1L); setData("Sample Data 2"); }});
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/cache"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("All entities removed from cache and database."));
+    }
+
+    @Test
+    void testGetEntity() throws Exception {
+        cachingService.add(new Data() {{ setId(1L); setData("Sample Data"); }});
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cache/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.data").value("Sample Data"));
     }
 
     @Test
