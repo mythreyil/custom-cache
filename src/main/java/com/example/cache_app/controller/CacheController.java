@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,8 +67,8 @@ public class CacheController {
      * @return all entities.
      */
     @GetMapping()
-    public Map<Long, Data> getAll() {
-        return cachingService.getAll();
+    public List<Data> getAll() {
+        return  new ArrayList<>(cachingService.getAll().values());
     }
 
     /**

@@ -2,6 +2,7 @@ package com.example.cache_app.service;
 
 import com.example.cache_app.entity.Data;
 
+import java.util.List;
 import java.util.Map;
 
 /**
