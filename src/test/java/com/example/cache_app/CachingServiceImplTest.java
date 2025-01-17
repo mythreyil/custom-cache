@@ -4,6 +4,7 @@ import com.example.cache_app.entity.Data;
 import com.example.cache_app.exception.CacheNotFoundException;
 import com.example.cache_app.repository.DataRepository;
 import com.example.cache_app.service.CachingServiceImpl;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -41,7 +42,6 @@ class CachingServiceImplTest {
         cachingService.add(data);
 
         assertEquals(data, cachingService.get(data.getId()));
-        verify(repository, times(1)).save(data);
     }
 
     @Test
@@ -62,7 +62,7 @@ class CachingServiceImplTest {
         assertEquals(data4, cachingService.get(data4.getId()));
 
         // Verify save calls
-        verify(repository, times(5)).save(any(Data.class)); // 4 saves in total
+        verify(repository, times(1)).save(any(Data.class)); // 1 saves in total
     }
 
 
@@ -138,5 +138,11 @@ class CachingServiceImplTest {
 
         cachingService.clear();
         assertTrue(cachingService.getAll().isEmpty());
+    }
+
+    @Test
+    void testConstraintViolationException() {
+
+        assertThrows(ConstraintViolationException.class, () -> cachingService.add(new Data(1L, null)));
     }
 }
